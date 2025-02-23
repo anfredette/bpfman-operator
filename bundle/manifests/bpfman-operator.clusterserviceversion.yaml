@@ -22,72 +22,12 @@ metadata:
             "nodeselector": {},
             "programs": [
               {
-                "bpffunctionname": "kprobe_test",
-                "kprobe": {
-                  "attach_points": [
-                    {
-                      "func_name": "try_to_wake_up",
-                      "offset": 0,
-                      "retprobe": false
-                    }
-                  ]
-                },
-                "type": "Kprobe"
-              },
-              {
-                "bpffunctionname": "kretprobe_test",
-                "kprobe": {
-                  "attach_points": [
-                    {
-                      "func_name": "try_to_wake_up",
-                      "offset": 0,
-                      "retprobe": true
-                    }
-                  ]
-                },
-                "type": "Kprobe"
-              },
-              {
-                "bpffunctionname": "tracepoint_test",
-                "tracepoint": {
-                  "attach_points": [
-                    {
-                      "name": "syscalls/sys_enter_openat"
-                    }
-                  ]
-                },
-                "type": "Tracepoint"
-              },
-              {
-                "bpffunctionname": "tc_pass_test",
-                "tc": {
-                  "attach_points": [
-                    {
-                      "direction": "ingress",
-                      "interfaceselector": {
-                        "primarynodeinterface": true
-                      },
-                      "priority": 55
-                    }
-                  ]
-                },
-                "type": "TC"
-              },
-              {
                 "bpffunctionname": "tcx_next_test",
                 "tcx": {
                   "attach_points": [
                     {
-                      "direction": "ingress",
-                      "interfaceselector": {
-                        "primarynodeinterface": true
-                      },
-                      "priority": 500
-                    },
-                    {
                       "containers": {
                         "containernames": [
-                          "bpfman",
                           "bpfman-agent"
                         ],
                         "namespace": "bpfman",
@@ -108,106 +48,6 @@ metadata:
                   ]
                 },
                 "type": "TCX"
-              },
-              {
-                "bpffunctionname": "uprobe_test",
-                "type": "Uprobe",
-                "uprobe": {
-                  "attach_points": [
-                    {
-                      "containers": {
-                        "containernames": [
-                          "bpfman",
-                          "bpfman-agent"
-                        ],
-                        "namespace": "bpfman",
-                        "pods": {
-                          "matchLabels": {
-                            "name": "bpfman-daemon"
-                          }
-                        }
-                      },
-                      "func_name": "malloc",
-                      "retprobe": false,
-                      "target": "libc"
-                    }
-                  ]
-                }
-              },
-              {
-                "bpffunctionname": "uretprobe_test",
-                "type": "Uprobe",
-                "uprobe": {
-                  "attach_points": [
-                    {
-                      "containers": {
-                        "containernames": [
-                          "bpfman",
-                          "bpfman-agent"
-                        ],
-                        "namespace": "bpfman",
-                        "pods": {
-                          "matchLabels": {
-                            "name": "bpfman-daemon"
-                          }
-                        }
-                      },
-                      "func_name": "malloc",
-                      "retprobe": true,
-                      "target": "libc"
-                    }
-                  ]
-                }
-              },
-              {
-                "bpffunctionname": "xdp_pass_test",
-                "type": "XDP",
-                "xdp": {
-                  "attach_points": [
-                    {
-                      "interfaceselector": {
-                        "primarynodeinterface": true
-                      },
-                      "priority": 55
-                    },
-                    {
-                      "containers": {
-                        "containernames": [
-                          "bpfman",
-                          "bpfman-agent"
-                        ],
-                        "namespace": "bpfman",
-                        "pods": {
-                          "matchLabels": {
-                            "name": "bpfman-daemon"
-                          }
-                        }
-                      },
-                      "interfaceselector": {
-                        "interfaces": [
-                          "eth0"
-                        ]
-                      },
-                      "priority": 100
-                    }
-                  ]
-                }
-              },
-              {
-                "bpffunctionname": "fentry_test",
-                "fentry": {
-                  "attach": true,
-                  "function_name": "do_unlinkat"
-                },
-                "type": "Fentry"
-              },
-              {
-                "bpffunctionname": "fexit_test",
-                "fexit": {
-                  "attach": true,
-                  "function_name": "do_unlinkat"
-                },
-                "type": "Fexit"
               }
             ]
           }
@@ -348,7 +188,7 @@ metadata:
     capabilities: Basic Install
     categories: OpenShift Optional
     containerImage: quay.io/bpfman/bpfman-operator:latest
-    createdAt: "2025-02-25T13:35:37Z"
+    createdAt: "2025-02-25T23:14:53Z"
     description: The bpfman Operator is designed to manage eBPF programs for applications.
     features.operators.openshift.io/cnf: "false"
     features.operators.openshift.io/cni: "false"
