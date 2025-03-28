@@ -261,8 +261,8 @@ func TestNsBpfApplicationControllerCreate(t *testing.T) {
 	// one.
 	require.Equal(t, false, bpfAppStateNew)
 
-	require.Equal(t, 1, len(bpfAppState.Status.Conditions))
-	require.Equal(t, string(bpfmaniov1alpha1.BpfAppStateCondPending), bpfAppState.Status.Conditions[0].Type)
+	require.Equal(t, 1, len(bpfAppState.Status.AppStatus.Conditions))
+	require.Equal(t, string(bpfmaniov1alpha1.BpfAppStateCondPending), bpfAppState.Status.AppStatus.Conditions[0].Type)
 
 	require.Equal(t, fakeNode.Name, bpfAppState.Labels[internal.K8sHostLabel])
 
@@ -288,8 +288,8 @@ func TestNsBpfApplicationControllerCreate(t *testing.T) {
 	// one.
 	require.Equal(t, false, bpfAppStateNew)
 
-	require.Equal(t, 1, len(bpfAppState2.Status.Conditions))
-	require.Equal(t, string(bpfmaniov1alpha1.BpfAppStateCondSuccess), bpfAppState2.Status.Conditions[0].Type)
+	require.Equal(t, 1, len(bpfAppState2.Status.AppStatus.Conditions))
+	require.Equal(t, string(bpfmaniov1alpha1.BpfAppStateCondSuccess), bpfAppState2.Status.AppStatus.Conditions[0].Type)
 
 	require.Equal(t, fakeNode.Name, bpfAppState2.Labels[internal.K8sHostLabel])
 
@@ -297,7 +297,7 @@ func TestNsBpfApplicationControllerCreate(t *testing.T) {
 
 	require.Equal(t, internal.NsBpfApplicationControllerFinalizer, bpfAppState2.Finalizers[0])
 
-	for _, program := range bpfAppState2.Spec.Programs {
+	for _, program := range bpfAppState2.Status.Programs {
 		r.Logger.Info("ProgramAttachStatus check", "program", program.Name, "status", program.ProgramLinkStatus)
 		require.Equal(t, bpfmaniov1alpha1.ProgAttachSuccess, program.ProgramLinkStatus)
 	}

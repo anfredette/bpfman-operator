@@ -91,7 +91,7 @@ type ApplicationReconciler interface {
 	getNodeSelector() *metav1.LabelSelector
 	GetStatus() *bpfmaniov1alpha1.BpfAppStatus
 	isBeingDeleted() bool
-	updateBpfAppStatus(ctx context.Context, condition metav1.Condition) error
+	updateBpfAppStatus(ctx context.Context, condition metav1.Condition)
 	updateLoadStatus(updateStatus bpfmaniov1alpha1.AppLoadStatus)
 	validateProgramList() error
 	load(ctx context.Context) error
@@ -193,14 +193,11 @@ func (r *ReconcilerCommon) updateStatus(
 		// if numConditions == 0, just add the new condition below.
 	}
 
-	r.Logger.Info("Calling KubeAPI to update BpfAppState condition", "Name", rec.getAppStateName, "condition", condition.Condition().Type)
-	err := rec.updateBpfAppStatus(ctx, condition.Condition())
-	if err != nil {
-		r.Logger.Info("failed to set BpfApplication object status", "reason", err)
-	}
+	r.Logger.Info("Updating BpfAppState condition", "Name", rec.getAppStateName, "condition", condition.Condition().Type)
+	rec.updateBpfAppStatus(ctx, condition.Condition())
 
 	r.Logger.V(1).Info("condition updated", "new condition", condition, "existing conds", status.Conditions)
-	return true, err
+	return true, nil
 }
 
 // reconcileProgram is a common function for reconciling programs contained in a

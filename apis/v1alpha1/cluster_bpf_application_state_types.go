@@ -93,8 +93,16 @@ type ClBpfApplicationProgramState struct {
 	TracePoint *ClTracepointProgramInfoState `json:"tracepoint,omitempty"`
 }
 
-// BpfApplicationSpec defines the desired state of BpfApplication
 type ClBpfApplicationStateSpec struct {
+	// updateCount is the number of times the BpfApplicationState has been updated. Set to 1
+	// when the object is created, then it is incremented prior to each update.
+	// This allows us to verify that the API server has the updated object prior
+	// to starting a new Reconcile operation.
+	UpdateCount int64 `json:"updateCount"`
+}
+
+// BpfApplicationSpec defines the desired state of BpfApplication
+type ClBpfApplicationStateStatus struct {
 	// node is the name of the node for this BpfApplicationStateSpec.
 	Node string `json:"node"`
 	// updateCount is the number of times the BpfApplicationState has been updated. Set to 1
@@ -109,6 +117,9 @@ type ClBpfApplicationStateSpec struct {
 	// It is a map from the bpf program name to BpfApplicationProgramState
 	// elements.
 	Programs []ClBpfApplicationProgramState `json:"programs,omitempty"`
+
+	// The overall status of the ClusterBpfApplication on the given node.
+	AppStatus BpfAppStatus `json:",inline"`
 }
 
 // +genclient
@@ -125,8 +136,8 @@ type ClusterBpfApplicationState struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ClBpfApplicationStateSpec `json:"spec,omitempty"`
-	Status BpfAppStatus              `json:"status,omitempty"`
+	Spec   ClBpfApplicationStateSpec   `json:"spec,omitempty"`
+	Status ClBpfApplicationStateStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -154,7 +165,7 @@ func (an ClusterBpfApplicationState) GetLabels() map[string]string {
 }
 
 func (an ClusterBpfApplicationState) GetStatus() *BpfAppStatus {
-	return &an.Status
+	return &an.Status.AppStatus
 }
 
 func (an ClusterBpfApplicationState) GetClientObject() client.Object {

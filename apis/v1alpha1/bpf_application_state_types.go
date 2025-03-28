@@ -64,8 +64,16 @@ type BpfApplicationProgramState struct {
 	URetProbe *UprobeProgramInfoState `json:"uretprobe,omitempty"`
 }
 
-// BpfApplicationSpec defines the desired state of BpfApplication
 type BpfApplicationStateSpec struct {
+	// updateCount is the number of times the BpfApplicationState has been updated. Set to 1
+	// when the object is created, then it is incremented prior to each update.
+	// This allows us to verify that the API server has the updated object prior
+	// to starting a new Reconcile operation.
+	UpdateCount int64 `json:"updateCount"`
+}
+
+// BpfApplicationSpec defines the desired state of BpfApplication
+type BpfApplicationStateStatus struct {
 	// node is the name of the node for this BpfApplicationStateSpec.
 	Node string `json:"node"`
 	// updateCount is the number of times the BpfApplicationState has been updated. Set to 1
@@ -80,6 +88,9 @@ type BpfApplicationStateSpec struct {
 	// It is a map from the bpf program name to BpfApplicationProgramState
 	// elements.
 	Programs []BpfApplicationProgramState `json:"programs,omitempty"`
+
+	// The overall status of the BpfApplication on the given node.
+	AppStatus BpfAppStatus `json:",inline"`
 }
 
 // +genclient
@@ -95,8 +106,8 @@ type BpfApplicationState struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   BpfApplicationStateSpec `json:"spec,omitempty"`
-	Status BpfAppStatus            `json:"status,omitempty"`
+	Spec   BpfApplicationStateSpec   `json:"spec,omitempty"`
+	Status BpfApplicationStateStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -124,7 +135,7 @@ func (an BpfApplicationState) GetLabels() map[string]string {
 }
 
 func (an BpfApplicationState) GetStatus() *BpfAppStatus {
-	return &an.Status
+	return &an.Status.AppStatus
 }
 
 func (an BpfApplicationState) GetClientObject() client.Object {
