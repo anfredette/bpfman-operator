@@ -630,10 +630,17 @@ spec:
                       properties:
                         links:
                           description: |-
-                            links is the list of points to which the program should be attached.  The list items
+                            links is the list of points to which the program is attached.  The list items
                             are optional and may be updated after the bpf program has been loaded
                           items:
                             properties:
+                              defaultField:
+                                default: 42
+                                description: |-
+                                  This field is optional since we included the +optional marker.  It will
+                                  be included in the serialized output even if empty since we gave it a
+                                  default value.
+                                type: integer
                               name:
                                 description: |-
                                   name refers to the name of a kernel tracepoint to attach the
@@ -642,8 +649,75 @@ spec:
                                 minLength: 1
                                 pattern: ^[a-zA-Z][a-zA-Z0-9_]+.
                                 type: string
+                              notReallyRequiredField1:
+                                description: |-
+                                  You might think this field is required since we included the
+                                  "validation:Required" marker.  However, omitempty takes precedence,
+                                  making this field optional.
+                                type: integer
+                              optionalField1:
+                                description: |-
+                                  This field is optional since we included the +optional and omitempty
+                                  markers.  It is not be included in the serialized output if empty because
+                                  we inluded omitembpty.  Best practice is to use both markers together.
+                                  When omitted, the default value is zero (the default for the int type).
+                                type: integer
+                              optionalField2:
+                                description: |-
+                                  This field is optional since we included the +optional marker.  However,
+                                  It is included in the serialized output even if empty. When omitted, the
+                                  default value is zero (the default for the int type).
+                                type: integer
+                              optionalField3:
+                                description: |-
+                                  This field is optional since we included the omitempty marker.  It is
+                                  also not be included in the serialized output if empty. When omitted, the
+                                  default value is zero (the default for the int type).
+                                type: integer
+                              optionalField4:
+                                description: |-
+                                  This field is optional since we included the +optional and omitempty
+                                  markers.  It is not be included in the serialized output if empty because
+                                  we inluded omitempty.  Best practice is to use both markers together.
+                                  When omitted, the default value is nil (the default for pointers). It is
+                                  useful to use a pointer type when you want to distinguish between a field
+                                  that is not set and a field that is set to the default value.
+                                type: integer
+                              optionalField5:
+                                description: |-
+                                  This field is optional since we included the +optional marker.
+                                  Apparently becuase it's a pointer field, it's omitted from the serialized
+                                  output even though we don't have omitempty. When omitted, the default
+                                  value is nil (the default for pointers). It is useful to use a pointer
+                                  type when you want to distinguish between a field that is not set and a
+                                  field that is set to the default value.
+                                type: integer
+                              optionalField6:
+                                description: |-
+                                  This field is optional since we included the omitempty marker.  It is
+                                  also not be included in the serialized output if empty. When omitted, the
+                                  default value is nil (the default for pointers). It is useful to use a
+                                  pointer type when you want to distinguish between a field that is not set
+                                  and a field that is set to the default value.
+                                type: integer
+                              requiredField1:
+                                description: This field is required since we didn't
+                                  make it optional.
+                                type: integer
+                              requiredField2:
+                                description: This field is required since we included
+                                  the +required marker.
+                                type: integer
+                              requiredField3:
+                                description: |-
+                                  This field is required since we included the "validation:Required"
+                                  marker.
+                                type: integer
                             required:
                             - name
+                            - requiredField1
+                            - requiredField2
+                            - requiredField3
                             type: object
                           type: array
                       type: object

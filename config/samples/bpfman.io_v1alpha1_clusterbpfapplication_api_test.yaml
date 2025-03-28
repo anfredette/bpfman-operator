@@ -1,0 +1,35 @@
+apiVersion: bpfman.io/v1alpha1
+kind: ClusterBpfApplication
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterbpfapplication
+  name: clusterbpfapplication-sample
+spec:
+  nodeSelector: {}
+  byteCode:
+    image:
+      url: quay.io/bpfman-bytecode/app-test:latest
+  globalData:
+    GLOBAL_u8:
+      - 0x01
+    GLOBAL_u32:
+      - 0x0D
+      - 0x0C
+      - 0x0B
+      - 0x0A
+  programs:
+    - name: tracepoint_test
+      type: TracePoint
+      tracepoint:
+        links:
+          - name: syscalls/sys_enter_openat
+            # optionalField1: 1
+            # optionalField2: 2
+            # optionalField3: 3
+            # optionalField4: 4
+            # optionalField5: 5
+            # optionalField6: 6
+            requiredField1: 1
+            requiredField2: 2
+            requiredField3: 3
+
